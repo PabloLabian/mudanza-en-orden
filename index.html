@@ -195,26 +195,23 @@ footer div:nth-child(even){text-align:right}
   </div>
 
   <h1>Inventario de permanencia en vivienda de origen</h1>
-  <p class="sub">Relación exhaustiva de los elementos que no deben ser retirados por la empresa de mudanzas durante el periodo transitorio. Lectura de arriba abajo. No saltarse secciones.</p>
+  <p class="sub">Todo lo que se queda en el piso mientras seguimos yendo unos días más. Ordenado, numerado y sin sorpresas.</p>
 
   <dl class="memo">
     <dt>Asunto</dt><dd>Mudanza.</dd>
-    <dt>Situación</dt><dd>Se ha detectado una tarea de gran volumen.</dd>
-    <dt>Medida</dt><dd>Descomposición en 40 subtareas verificables, agrupadas en 11 secciones y ordenadas por prioridad.</dd>
-    <dt>Ocio previsto</dt><dd>Ninguno.</dd>
-    <dt>Firmado</dt><dd>La Dirección.</dd>
+    <dt>Situación</dt><dd>Son muchas cosas a la vez.</dd>
+    <dt>Solución</dt><dd>40 tareas en 11 secciones. Una detrás de otra.</dd>
+    <dt>Confeti</dt><dd>Ninguno.</dd>
   </dl>
 
   <div class="rules">
-    <h2>Normas de uso</h2>
+    <h2>Cómo funciona</h2>
     <ol>
-      <li><span>Los elementos nuevos se escriben en el campo de su sección.<small>No en un pósit. No en el móvil. No "ya me acuerdo".</small></span></li>
-      <li><span>El sistema corrige automáticamente la mayúscula inicial.<small>Escribir en minúscula se considera un despiste. Queda subsanado.</small></span></li>
-      <li><span>Se elimina cualquier signo de puntuación final.<small>Los elementos de un inventario no terminan en punto. Ni en exclamación.</small></span></li>
-      <li><span>Cada elemento nuevo se reubica por orden alfabético.<small>Su preferencia sobre el orden no ha sido consultada.</small></span></li>
-      <li><span>Todo elemento añadido recibe la observación "Añadido fuera de plazo".<small>Debería haberlo previsto.</small></span></li>
-      <li><span>Este documento no guarda nada.<small>Al recargar vuelve a su estado original, que es el correcto.</small></span></li>
-      <li><span>Este documento no contiene confeti ni admite anotaciones a mano.<small>No insista.</small></span></li>
+      <li><span>Para añadir algo, escríbelo en el campo de su sección.</span></li>
+      <li><span>La mayúscula inicial se pone sola y el punto final se quita solo.<small>Los elementos de una lista no terminan en punto.</small></span></li>
+      <li><span>Lo nuevo se coloca automáticamente por orden alfabético.</span></li>
+      <li><span>Todo lo añadido recibe la observación "Añadido fuera de plazo".<small>Debería haberlo previsto.</small></span></li>
+      <li><span>No se guarda nada: al recargar, la lista vuelve a estar como al principio.</span></li>
     </ol>
   </div>
 
@@ -228,51 +225,51 @@ footer div:nth-child(even){text-align:right}
     <div class="end">Fin del documento.</div>
     <div>Página 1 de 1</div>
     <div>Este documento no contiene confeti.</div>
-    <div>No se aceptan anotaciones a mano.</div>
+    <div>Revisado. Dos veces.</div>
   </footer>
 </main>
 
 <script>
 const SECTIONS = [
-  {t:"Protocolo de señalización", note:"Condición previa a todas las demás secciones.", items:[
-    ["Zona delimitada con cartel NO SE LLEVA","1 ud.","Tipografía legible a 3 m como mínimo."],
-    ["Aviso verbal al encargado","3 ud.","Días 1, 2 y 3. Registrar hora."],
-    ["Kit contenido en maletas","1 lote","Prohibido el uso de cajas de cartón."]
+  {t:"Señalización", note:"Antes que nada.", items:[
+    ["Zona marcada con cartel NO SE LLEVA","1 ud.","Una habitación o un armario."],
+    ["Avisar al encargado","1 ud.","El primer día."],
+    ["Kit guardado en maletas","1 lote","Mejor que en cajas: las cajas acaban en el camión."]
   ]},
-  {t:"Suministros", note:"No modificar hasta la fecha de cierre.", items:[
-    ["Luz, agua y gas en servicio","3 ud.","Hasta el último día, inclusive."],
-    ["Fecha de traslado de fibra","1 ud.","Confirmar por escrito."]
+  {t:"Suministros", note:"", items:[
+    ["Luz, agua y gas activos","3 ud.","Hasta el último día."],
+    ["Fecha de traslado de la fibra","1 ud.","Al instalarla en la casa nueva, cortan la del piso."]
   ]},
   {t:"Puesto de trabajo", note:"", items:[
     ["Portátil y cargadores","1 lote",""],
-    ["Regleta y alargador","2 ud.","Longitud del alargador: 3 m."],
+    ["Regleta y alargador","2 ud.",""],
     ["Auriculares y equipo diario","1 lote",""],
     ["Mesa plegable y silla","2 ud.","Altura de mesa: 72 a 75 cm."],
-    ["Router del operador","1 ud.","Hasta el traslado de línea."]
+    ["Router del operador","1 ud.","Hasta el traslado de la línea."]
   ]},
-  {t:"Descanso nocturno", note:"Sección condicional. Aplicar solo si se pernocta.", items:[
-    ["Cama o colchón hinchable","1 ud.","Verificar estanqueidad la víspera."],
+  {t:"Dormir", note:"Solo si os quedáis a pasar la noche.", items:[
+    ["Cama o colchón hinchable","1 ud.",""],
     ["Sábanas y almohadas","1 juego",""],
     ["Manta o nórdico","1 ud.",""]
   ]},
-  {t:"Higiene", note:"", items:[
+  {t:"Baño", note:"", items:[
     ["Toallas","2 ud.",""],
-    ["Papel higiénico","4 rollos","Cantidad mínima. No negociable."],
+    ["Papel higiénico","4 rollos",""],
     ["Gel, champú, cepillos y desodorante","1 lote",""],
     ["Secador","1 ud.",""],
-    ["Medicación","1 lote","Según pauta vigente."]
+    ["Medicación","1 lote",""]
   ]},
-  {t:"Cocina mínima", note:"No se cocina. Se subsiste.", items:[
+  {t:"Cocina mínima", note:"", items:[
     ["Cafetera y café","1 ud.",""],
-    ["Tazas, platos, vasos y cubiertos","2 juegos","Uno por persona."],
+    ["Tazas, platos, vasos y cubiertos","2 juegos",""],
     ["Sartén o cazo y cuchillo","2 ud.",""],
     ["Lavavajillas y bayeta","2 ud.",""],
     ["Bolsas de basura","10 ud.",""],
-    ["Agua y alimentos no perecederos","1 lote","Caducidad posterior a la fecha de cierre."]
+    ["Agua y comida que no caduque","1 lote",""]
   ]},
-  {t:"Indumentaria", note:"", items:[
+  {t:"Ropa", note:"", items:[
     ["Maleta con ropa","1 ud./persona","Doblada. No enrollada."],
-    ["Cargador de móvil","1 ud./persona","No se comparten cargadores."]
+    ["Cargador de móvil","1 ud./persona",""]
   ]},
   {t:"Limpieza final", note:"", items:[
     ["Escoba, recogedor, fregona y cubo","4 ud.",""],
@@ -284,17 +281,17 @@ const SECTIONS = [
     ["Cinta americana","1 rollo","Corte recto. Nunca rasgado."],
     ["Bombillas de repuesto","2 ud.","Misma temperatura de color que las instaladas."]
   ]},
-  {t:"Transporte personal", note:"No delegable en la empresa de mudanzas.", items:[
-    ["DNI, escrituras, hipoteca y contratos","1 carpeta","Ordenados por fecha."],
-    ["Llaves de ambas viviendas","2 juegos","Etiquetadas."],
+  {t:"Va contigo en el coche", note:"Esto no se lo lleva la empresa.", items:[
+    ["DNI, escrituras, hipoteca y contratos","1 carpeta","Ordenados por fecha, claro."],
+    ["Llaves de las dos casas","2 juegos",""],
     ["Ordenadores y discos de trabajo","1 lote",""],
     ["Joyas y dinero","1 lote",""]
   ]},
-  {t:"Cierre", note:"Ejecutar en el orden indicado.", items:[
-    ["Fotografía de contadores","3 ud.","Luz, agua y gas. Lectura legible."],
-    ["Revisión de armarios, cajones, trastero y tendedero","4 zonas","Sentido horario."],
-    ["Retirada del kit en vehículo propio","1 viaje","Dos como máximo."],
-    ["Entrega de llaves","1 ud.","Sin despedidas prolongadas."]
+  {t:"Último día", note:"", items:[
+    ["Foto a los contadores","3 ud.","Luz, agua y gas."],
+    ["Repaso a armarios, cajones, trastero y tendedero","4 zonas","En sentido horario."],
+    ["Lo que quede del kit, al coche","1 viaje",""],
+    ["Entregar las llaves","1 ud.",""]
   ]}
 ];
 
@@ -332,7 +329,7 @@ function render(){
         <td class="num">${pad(i)}.${pad(j + 1)}</td>
         <td class="el">${esc(it[0])}</td>
         <td class="qty">${esc(it[1])}</td>
-        <td class="obs">${esc(it[2] || "Sin observaciones.")}</td>
+        <td class="obs">${esc(it[2] || "")}</td>
       </tr>`;
     }).join("");
     document.querySelector(`[data-c="${i}"]`).textContent = d + " / " + s.items.length;
@@ -357,7 +354,7 @@ function addItem(box){
   const input = box.querySelector("input");
   const msg = document.querySelector(`[data-m="${i}"]`);
   let t = input.value.trim().replace(/\s+/g, " ");
-  if(!t){ msg.textContent = "Error 01: campo vacío. Nada que añadir."; input.focus(); return; }
+  if(!t){ msg.textContent = "El campo está vacío."; input.focus(); return; }
   t = t.charAt(0).toUpperCase() + t.slice(1).replace(/[.!¡¿?]+$/, "");
   const prev = SECTIONS[i].items.map(x => x[0]);
   const keepChecked = new Set([...checked].filter(id => id.startsWith(i + ".")).map(id => prev[+id.split(".")[1]]));
@@ -367,7 +364,7 @@ function addItem(box){
   SECTIONS[i].items.forEach((x, j) => { if(keepChecked.has(x[0])) checked.add(i + "." + j); });
   input.value = "";
   input.focus();
-  msg.textContent = "Elemento registrado. Orden alfabético restablecido. Mayúscula inicial corregida.";
+  msg.textContent = "Añadido y colocado por orden alfabético.";
   render();
 }
 
