@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MUD-2026-001 Inventario de permanencia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --paper:#ffffff;
+  --ink:#111111;
+  --mid:#8a8a8a;
+  --rule:#d9d9d9;
+  --grid:rgba(0,0,0,.035);
+  --grid-major:rgba(0,0,0,.07);
+  --u:8px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:64px 64px, 64px 64px, 8px 8px, 8px 8px;
+  color:var(--ink);
+  font-family:"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size:15px;
+  line-height:24px;
+  font-variant-numeric:tabular-nums;
+}
+.mono{font-family:"IBM Plex Mono", "SFMono-Regular", Consolas, monospace}
+
+/* Regla milimetrada */
+.ruler{
+  position:sticky; top:0; z-index:5;
+  height:24px; background:var(--paper);
+  border-bottom:1px solid var(--ink);
+  background-image:
+    linear-gradient(90deg, var(--ink) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ink) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mid) 1px, transparent 1px);
+  background-size:80px 24px, 40px 12px, 8px 6px;
+  background-repeat:repeat-x;
+  background-position:0 100%, 0 100%, 0 100%;
+}
+.ruler span{
+  position:absolute; top:2px; left:4px;
+  font-family:"IBM Plex Mono", monospace; font-size:10px; line-height:12px; color:var(--mid);
+}
+
+.sheet{
+  position:relative;
+  max-width:832px; margin:48px auto 96px; padding:48px 64px;
+  background:var(--paper);
+  border:1px solid var(--ink);
+}
+/* Marcas de corte */
+.sheet::before,.sheet::after,.crop::before,.crop::after{
+  content:""; position:absolute; width:16px; height:16px; border-color:var(--ink); border-style:solid;
+}
+.sheet::before{top:-9px; left:-9px; border-width:0 1px 1px 0}
+.sheet::after{top:-9px; right:-9px; border-width:0 0 1px 1px}
+.crop::before{bottom:-9px; left:-9px; border-width:1px 1px 0 0}
+.crop::after{bottom:-9px; right:-9px; border-width:1px 0 0 1px}
+
+.meta{
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:0;
+  border-top:1px solid var(--ink); border-bottom:1px solid var(--ink);
+  font-family:"IBM Plex Mono", monospace; font-size:11px; line-height:16px;
+}
+.meta div{padding:8px 8px 8px 0; border-right:1px solid var(--rule)}
+.meta div:last-child{border-right:0}
+.meta b{display:block; font-weight:400; color:var(--mid)}
+
+h1{
+  font-weight:400; font-size:40px; line-height:48px; letter-spacing:-.01em;
+  margin:48px 0 8px;
+}
+.sub{margin:0 0 48px; color:var(--mid); max-width:56ch}
+
+.memo{
+  border:1px solid var(--ink); padding:24px; margin:0 0 48px;
+  display:grid; grid-template-columns:120px 1fr; gap:8px 24px;
+  font-size:14px;
+}
+.memo dt{font-family:"IBM Plex Mono", monospace; font-size:11px; color:var(--mid)}
+.memo dd{margin:0}
+
+.status{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-family:"IBM Plex Mono", monospace; font-size:12px;
+  margin:0 0 8px;
+}
+.bar{display:grid; grid-template-columns:repeat(40, 1fr); gap:2px; margin:0 0 8px}
+.bar i{display:block; height:8px; border:1px solid var(--ink); background:var(--paper)}
+.bar i.on{background:var(--ink)}
+.bar-legend{font-family:"IBM Plex Mono", monospace; font-size:11px; color:var(--mid); margin:0 0 64px}
+
+
+.rules{border-top:2px solid var(--ink); margin:0 0 64px; padding-top:8px}
+.rules h2{font-size:15px; line-height:24px; font-weight:500; margin:0 0 8px; letter-spacing:.02em}
+.rules ol{margin:0; padding:0; list-style:none; counter-reset:r}
+.rules li{display:grid; grid-template-columns:48px 1fr; padding:8px 0; border-bottom:1px solid var(--rule); font-size:14px}
+.rules li::before{counter-increment:r; content:"R." counter(r, decimal-leading-zero); font-family:"IBM Plex Mono", monospace; font-size:12px; color:var(--mid)}
+.rules li span{display:block}
+.rules li small{display:block; color:var(--mid); font-size:13px}
+
+section{margin:0 0 56px}
+.sec-head{
+  display:grid; grid-template-columns:48px 1fr auto; align-items:baseline;
+  border-bottom:2px solid var(--ink); padding-bottom:8px;
+}
+.sec-head .n{font-family:"IBM Plex Mono", monospace; font-size:12px}
+.sec-head h2{font-size:15px; line-height:24px; font-weight:500; margin:0; letter-spacing:.02em}
+.sec-head .c{font-family:"IBM Plex Mono", monospace; font-size:12px; color:var(--mid)}
+.sec-note{margin:8px 0 0 48px; font-size:13px; color:var(--mid)}
+
+table{width:100%; border-collapse:collapse; margin-top:8px}
+th{
+  text-align:left; font-weight:400; font-family:"IBM Plex Mono", monospace; font-size:11px; color:var(--mid);
+  padding:8px 8px 8px 0; border-bottom:1px solid var(--ink);
+}
+td{padding:8px 8px 8px 0; border-bottom:1px solid var(--rule); vertical-align:top}
+th.qty, td.qty{text-align:right; width:72px; padding-right:16px}
+td.num, th.num{width:48px; font-family:"IBM Plex Mono", monospace; font-size:12px}
+td.chk, th.chk{width:32px}
+td.obs{color:var(--mid); font-size:13px; width:40%}
+td.qty{font-family:"IBM Plex Mono", monospace; font-size:12px}
+tr.done td.el{text-decoration:line-through; text-decoration-thickness:1px; color:var(--mid)}
+
+input[type=checkbox]{
+  appearance:none; -webkit-appearance:none; margin:4px 0 0;
+  width:16px; height:16px; border:1px solid var(--ink); border-radius:0; background:var(--paper);
+  display:grid; place-items:center; cursor:pointer;
+}
+input[type=checkbox]::after{content:""; width:8px; height:8px; background:var(--ink); transform:scale(0)}
+input[type=checkbox]:checked::after{transform:scale(1)}
+input[type=checkbox]:focus-visible{outline:1px solid var(--ink); outline-offset:3px}
+
+.add{display:flex; gap:8px; margin-top:16px; padding-left:80px}
+.add input{
+  flex:1; font:inherit; font-size:14px; padding:4px 8px; height:32px;
+  border:1px solid var(--ink); border-radius:0; background:var(--paper); color:var(--ink);
+}
+.add input:focus{outline:1px solid var(--ink); outline-offset:2px}
+.add button{
+  font-family:"IBM Plex Mono", monospace; font-size:12px; height:32px; padding:0 16px;
+  border:1px solid var(--ink); border-radius:0; background:var(--ink); color:var(--paper); cursor:pointer;
+}
+.add button:focus-visible{outline:1px solid var(--ink); outline-offset:2px}
+.msg{min-height:24px; padding-left:80px; font-family:"IBM Plex Mono", monospace; font-size:11px; color:var(--mid)}
+
+footer{
+  border-top:1px solid var(--ink); padding-top:16px; margin-top:64px;
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+  font-family:"IBM Plex Mono", monospace; font-size:11px; color:var(--mid);
+}
+footer .end{color:var(--ink)}
+footer div:nth-child(even){text-align:right}
+
+@media (max-width:720px){
+  .sheet{margin:24px 8px 48px; padding:24px 16px}
+  .meta{grid-template-columns:1fr 1fr}
+  .meta div:nth-child(2){border-right:0}
+  .memo{grid-template-columns:1fr; gap:0}
+  .memo dd{margin-bottom:8px}
+  td.obs{display:none}
+  th.obsh{display:none}
+  .add,.msg{padding-left:0}
+  h1{font-size:30px; line-height:40px}
+}
+</style>
+</head>
+<body>
+<div class="ruler" aria-hidden="true"><span>0 mm</span></div>
+
+<main class="sheet">
+  <div class="crop" aria-hidden="true"></div>
+
+  <div class="meta">
+    <div><b>Referencia</b>MUD-2026-001</div>
+    <div><b>Revisión</b>00</div>
+    <div><b>Elementos</b><span id="m-total">40</span></div>
+    <div><b>Desviación admitida</b>0,00 %</div>
+  </div>
+
+  <h1>Inventario de permanencia en vivienda de origen</h1>
+  <p class="sub">Relación exhaustiva de los elementos que no deben ser retirados por la empresa de mudanzas durante el periodo transitorio. Lectura de arriba abajo. No saltarse secciones.</p>
+
+  <dl class="memo">
+    <dt>Asunto</dt><dd>Mudanza.</dd>
+    <dt>Situación</dt><dd>Se ha detectado una tarea de gran volumen.</dd>
+    <dt>Medida</dt><dd>Descomposición en 40 subtareas verificables, agrupadas en 11 secciones y ordenadas por prioridad.</dd>
+    <dt>Ocio previsto</dt><dd>Ninguno.</dd>
+    <dt>Firmado</dt><dd>La Dirección.</dd>
+  </dl>
+
+  <div class="rules">
+    <h2>Normas de uso</h2>
+    <ol>
+      <li><span>Los elementos nuevos se escriben en el campo de su sección.<small>No en un pósit. No en el móvil. No "ya me acuerdo".</small></span></li>
+      <li><span>El sistema corrige automáticamente la mayúscula inicial.<small>Escribir en minúscula se considera un despiste. Queda subsanado.</small></span></li>
+      <li><span>Se elimina cualquier signo de puntuación final.<small>Los elementos de un inventario no terminan en punto. Ni en exclamación.</small></span></li>
+      <li><span>Cada elemento nuevo se reubica por orden alfabético.<small>Su preferencia sobre el orden no ha sido consultada.</small></span></li>
+      <li><span>Todo elemento añadido recibe la observación "Añadido fuera de plazo".<small>Debería haberlo previsto.</small></span></li>
+      <li><span>Este documento no guarda nada.<small>Al recargar vuelve a su estado original, que es el correcto.</small></span></li>
+      <li><span>Este documento no contiene confeti ni admite anotaciones a mano.<small>No insista.</small></span></li>
+    </ol>
+  </div>
+
+  <div class="status"><span>Estado de ejecución</span><span id="pct">0 / 40 (0,00 %)</span></div>
+  <div class="bar" id="bar" aria-hidden="true"></div>
+  <p class="bar-legend">1 casilla = 1 elemento. Escala 1:1.</p>
+
+  <div id="lists"></div>
+
+  <footer>
+    <div class="end">Fin del documento.</div>
+    <div>Página 1 de 1</div>
+    <div>Este documento no contiene confeti.</div>
+    <div>No se aceptan anotaciones a mano.</div>
+  </footer>
+</main>
+
+<script>
+const SECTIONS = [
+  {t:"Protocolo de señalización", note:"Condición previa a todas las demás secciones.", items:[
+    ["Zona delimitada con cartel NO SE LLEVA","1 ud.","Tipografía legible a 3 m como mínimo."],
+    ["Aviso verbal al encargado","3 ud.","Días 1, 2 y 3. Registrar hora."],
+    ["Kit contenido en maletas","1 lote","Prohibido el uso de cajas de cartón."]
+  ]},
+  {t:"Suministros", note:"No modificar hasta la fecha de cierre.", items:[
+    ["Luz, agua y gas en servicio","3 ud.","Hasta el último día, inclusive."],
+    ["Fecha de traslado de fibra","1 ud.","Confirmar por escrito."]
+  ]},
+  {t:"Puesto de trabajo", note:"", items:[
+    ["Portátil y cargadores","1 lote",""],
+    ["Regleta y alargador","2 ud.","Longitud del alargador: 3 m."],
+    ["Auriculares y equipo diario","1 lote",""],
+    ["Mesa plegable y silla","2 ud.","Altura de mesa: 72 a 75 cm."],
+    ["Router del operador","1 ud.","Hasta el traslado de línea."]
+  ]},
+  {t:"Descanso nocturno", note:"Sección condicional. Aplicar solo si se pernocta.", items:[
+    ["Cama o colchón hinchable","1 ud.","Verificar estanqueidad la víspera."],
+    ["Sábanas y almohadas","1 juego",""],
+    ["Manta o nórdico","1 ud.",""]
+  ]},
+  {t:"Higiene", note:"", items:[
+    ["Toallas","2 ud.",""],
+    ["Papel higiénico","4 rollos","Cantidad mínima. No negociable."],
+    ["Gel, champú, cepillos y desodorante","1 lote",""],
+    ["Secador","1 ud.",""],
+    ["Medicación","1 lote","Según pauta vigente."]
+  ]},
+  {t:"Cocina mínima", note:"No se cocina. Se subsiste.", items:[
+    ["Cafetera y café","1 ud.",""],
+    ["Tazas, platos, vasos y cubiertos","2 juegos","Uno por persona."],
+    ["Sartén o cazo y cuchillo","2 ud.",""],
+    ["Lavavajillas y bayeta","2 ud.",""],
+    ["Bolsas de basura","10 ud.",""],
+    ["Agua y alimentos no perecederos","1 lote","Caducidad posterior a la fecha de cierre."]
+  ]},
+  {t:"Indumentaria", note:"", items:[
+    ["Maleta con ropa","1 ud./persona","Doblada. No enrollada."],
+    ["Cargador de móvil","1 ud./persona","No se comparten cargadores."]
+  ]},
+  {t:"Limpieza final", note:"", items:[
+    ["Escoba, recogedor, fregona y cubo","4 ud.",""],
+    ["Productos, guantes y estropajo","1 lote",""],
+    ["Bolsas","20 ud.",""]
+  ]},
+  {t:"Herramientas", note:"", items:[
+    ["Destornillador y cúter","2 ud.",""],
+    ["Cinta americana","1 rollo","Corte recto. Nunca rasgado."],
+    ["Bombillas de repuesto","2 ud.","Misma temperatura de color que las instaladas."]
+  ]},
+  {t:"Transporte personal", note:"No delegable en la empresa de mudanzas.", items:[
+    ["DNI, escrituras, hipoteca y contratos","1 carpeta","Ordenados por fecha."],
+    ["Llaves de ambas viviendas","2 juegos","Etiquetadas."],
+    ["Ordenadores y discos de trabajo","1 lote",""],
+    ["Joyas y dinero","1 lote",""]
+  ]},
+  {t:"Cierre", note:"Ejecutar en el orden indicado.", items:[
+    ["Fotografía de contadores","3 ud.","Luz, agua y gas. Lectura legible."],
+    ["Revisión de armarios, cajones, trastero y tendedero","4 zonas","Sentido horario."],
+    ["Retirada del kit en vehículo propio","1 viaje","Dos como máximo."],
+    ["Entrega de llaves","1 ud.","Sin despedidas prolongadas."]
+  ]}
+];
+
+const checked = new Set();
+const pad = n => String(n).padStart(2, "0");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function build(){
+  document.getElementById("lists").innerHTML = SECTIONS.map((s, i) => `
+    <section>
+      <div class="sec-head"><span class="n">${pad(i)}</span><h2>${esc(s.t)}</h2><span class="c" data-c="${i}"></span></div>
+      ${s.note ? `<p class="sec-note">${esc(s.note)}</p>` : ""}
+      <table>
+        <thead><tr><th class="chk"></th><th class="num">Nº</th><th>Elemento</th><th class="qty">Cant.</th><th class="obsh">Observaciones</th></tr></thead>
+        <tbody data-s="${i}"></tbody>
+      </table>
+      <div class="add" data-s="${i}">
+        <input type="text" maxlength="80" placeholder="Nuevo elemento" aria-label="Nuevo elemento para ${esc(s.t)}">
+        <button type="button">Añadir elemento</button>
+      </div>
+      <div class="msg" data-m="${i}" aria-live="polite"></div>
+    </section>`).join("");
+}
+
+function render(){
+  let total = 0, done = 0;
+  SECTIONS.forEach((s, i) => {
+    const body = document.querySelector(`tbody[data-s="${i}"]`);
+    let d = 0;
+    body.innerHTML = s.items.map((it, j) => {
+      const id = i + "." + j; const on = checked.has(id);
+      total++; if(on){ done++; d++; }
+      return `<tr class="${on ? "done" : ""}">
+        <td class="chk"><input type="checkbox" data-id="${id}" ${on ? "checked" : ""} aria-label="${esc(it[0])}"></td>
+        <td class="num">${pad(i)}.${pad(j + 1)}</td>
+        <td class="el">${esc(it[0])}</td>
+        <td class="qty">${esc(it[1])}</td>
+        <td class="obs">${esc(it[2] || "Sin observaciones.")}</td>
+      </tr>`;
+    }).join("");
+    document.querySelector(`[data-c="${i}"]`).textContent = d + " / " + s.items.length;
+  });
+  const pct = total ? (done / total * 100) : 0;
+  document.getElementById("pct").textContent = `${done} / ${total} (${pct.toFixed(2).replace(".", ",")} %)`;
+  document.getElementById("m-total").textContent = total;
+  const bar = document.getElementById("bar");
+  bar.style.gridTemplateColumns = `repeat(${total}, 1fr)`;
+  bar.innerHTML = Array.from({length: total}, (_, k) => `<i class="${k < done ? "on" : ""}"></i>`).join("");
+}
+
+document.addEventListener("change", e => {
+  const c = e.target.closest("input[type=checkbox]");
+  if(!c) return;
+  if(c.checked) checked.add(c.dataset.id); else checked.delete(c.dataset.id);
+  render();
+});
+
+function addItem(box){
+  const i = +box.dataset.s;
+  const input = box.querySelector("input");
+  const msg = document.querySelector(`[data-m="${i}"]`);
+  let t = input.value.trim().replace(/\s+/g, " ");
+  if(!t){ msg.textContent = "Error 01: campo vacío. Nada que añadir."; input.focus(); return; }
+  t = t.charAt(0).toUpperCase() + t.slice(1).replace(/[.!¡¿?]+$/, "");
+  const prev = SECTIONS[i].items.map(x => x[0]);
+  const keepChecked = new Set([...checked].filter(id => id.startsWith(i + ".")).map(id => prev[+id.split(".")[1]]));
+  SECTIONS[i].items.push([t, "1 ud.", "Añadido fuera de plazo."]);
+  SECTIONS[i].items.sort((a, b) => a[0].localeCompare(b[0], "es"));
+  [...checked].filter(id => id.startsWith(i + ".")).forEach(id => checked.delete(id));
+  SECTIONS[i].items.forEach((x, j) => { if(keepChecked.has(x[0])) checked.add(i + "." + j); });
+  input.value = "";
+  input.focus();
+  msg.textContent = "Elemento registrado. Orden alfabético restablecido. Mayúscula inicial corregida.";
+  render();
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest(".add button");
+  if(b) addItem(b.closest(".add"));
+});
+document.addEventListener("keydown", e => {
+  if(e.key === "Enter" && e.target.matches(".add input")){ e.preventDefault(); addItem(e.target.closest(".add")); }
+});
+
+build();
+render();
+</script>
+</body>
+</html>
