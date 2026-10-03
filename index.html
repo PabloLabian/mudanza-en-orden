@@ -6,7 +6,7 @@
 <title>MUD-2026-001 Inventario de permanencia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
   color-scheme:light;
@@ -115,6 +115,60 @@ h1{
 .rules li span{display:block}
 .rules li small{display:block; color:var(--mid); font-size:13px}
 
+
+/* ===== MODO CUQUI ===== */
+.cute{
+  --c-bg:#ffe3f1; --c-acc:#ff7eb6; --c-ink:#7a3b5c;
+  background:var(--c-bg); border-radius:28px; padding:24px 24px 16px;
+  font-family:"Fredoka", "Comic Sans MS", system-ui, sans-serif; color:var(--c-ink);
+  box-shadow:0 6px 0 var(--c-acc);
+  position:relative;
+}
+.cute.c1{--c-bg:#ffe3f1; --c-acc:#ff9cc8; --c-ink:#8a3a63}
+.cute.c2{--c-bg:#e3f1ff; --c-acc:#9cc8ff; --c-ink:#2f5a8a}
+.cute.c3{--c-bg:#fff3d1; --c-acc:#ffd36b; --c-ink:#7a5a12}
+.cute.c4{--c-bg:#e6f9e8; --c-acc:#9be3a6; --c-ink:#2f6b3a}
+.cute.c5{--c-bg:#efe6ff; --c-acc:#c7a8ff; --c-ink:#5a3a8a}
+.cute .cute-head{display:flex; align-items:center; gap:12px; margin-bottom:4px}
+.cute .cute-head .em{font-size:28px; line-height:1}
+.cute h2{font-family:"Fredoka", cursive; font-weight:600; font-size:22px; line-height:28px; margin:0; letter-spacing:0}
+.cute .cute-count{margin-left:auto; background:#fff; border-radius:999px; padding:2px 12px; font-size:13px}
+.cute .cute-note{margin:0 0 12px 40px; font-size:14px; opacity:.85}
+.cute ul{list-style:none; margin:0; padding:0}
+.cute li{
+  display:grid; grid-template-columns:36px 1fr auto; gap:8px; align-items:center;
+  background:#fff; border-radius:18px; padding:10px 14px; margin-bottom:8px;
+}
+.cute li .heart{
+  appearance:none; -webkit-appearance:none; margin:0; width:28px; height:28px; border:0; background:none;
+  cursor:pointer; font-size:22px; line-height:28px; text-align:center; transition:transform .2s;
+}
+.cute li .heart::before{content:"🤍"}
+.cute li .heart:checked::before{content:"💖"}
+.cute li .heart:checked{transform:scale(1.15)}
+.cute li .heart::after{display:none}
+.cute li .heart:focus-visible{outline:2px dashed var(--c-acc); outline-offset:2px; border-radius:50%}
+.cute li .t{font-size:16px}
+.cute li .t small{display:block; font-size:13px; opacity:.75}
+.cute li.done .t{text-decoration:line-through; text-decoration-color:var(--c-acc); text-decoration-thickness:2px; opacity:.7}
+.cute li .q{font-size:13px; background:var(--c-bg); border-radius:999px; padding:2px 10px; white-space:nowrap}
+.cute .add{padding-left:0}
+.cute .add input{border-radius:999px; border:2px solid var(--c-acc); font-family:"Fredoka", cursive; padding:4px 16px}
+.cute .add button{border-radius:999px; border:0; background:var(--c-acc); color:#fff; font-family:"Fredoka", cursive; font-size:14px}
+.cute .msg{padding-left:0; font-family:"Fredoka", cursive; font-size:13px; color:var(--c-ink)}
+.cute-sticker{
+  position:absolute; top:-18px; right:-28px; transform:rotate(12deg);
+  background:#ffe3f1; color:#d6408a; border-radius:999px; padding:8px 16px;
+  font-family:"Fredoka", cursive; font-weight:600; font-size:15px; box-shadow:0 4px 0 #ff9cc8;
+}
+.pd{
+  font-family:"Fredoka", cursive; color:#8a3a63; background:#fff0f7; border-radius:20px;
+  padding:12px 18px; margin:-32px 0 48px auto; width:max-content; max-width:100%; transform:rotate(-1.5deg);
+  box-shadow:0 4px 0 #ff9cc8;
+}
+.cute-foot{font-family:"Fredoka", cursive; color:#d6408a}
+@media (max-width:720px){ .cute-sticker{right:-4px} .cute .cute-note{margin-left:0} }
+
 section{margin:0 0 56px}
 .sec-head{
   display:grid; grid-template-columns:48px 1fr auto; align-items:baseline;
@@ -186,6 +240,7 @@ footer div:nth-child(even){text-align:right}
 
 <main class="sheet">
   <div class="crop" aria-hidden="true"></div>
+  <div class="cute-sticker" aria-hidden="true">¡Tú puedes! 🌈</div>
 
   <div class="meta">
     <div><b>Referencia</b>MUD-2026-001</div>
@@ -195,23 +250,23 @@ footer div:nth-child(even){text-align:right}
   </div>
 
   <h1>Inventario de permanencia en vivienda de origen</h1>
-  <p class="sub">Todo lo que se queda en el piso mientras seguimos yendo unos días más. Ordenado, numerado y sin sorpresas.</p>
+  <p class="sub">Relación exhaustiva de los elementos que no deben ser retirados por la empresa de mudanzas durante el periodo transitorio. Lectura de arriba abajo. No saltarse secciones.</p>
 
   <dl class="memo">
     <dt>Asunto</dt><dd>Mudanza.</dd>
-    <dt>Situación</dt><dd>Son muchas cosas a la vez.</dd>
-    <dt>Solución</dt><dd>40 tareas en 11 secciones. Una detrás de otra.</dd>
-    <dt>Confeti</dt><dd>Ninguno.</dd>
+    <dt>Situación</dt><dd>Se ha detectado una tarea de gran volumen.</dd>
+    <dt>Medida</dt><dd>Descomposición en 40 subtareas verificables, agrupadas en 11 secciones.</dd>
+    <dt>Ocio previsto</dt><dd>Ninguno.</dd>
+    <dt>Firmado</dt><dd>La Dirección.</dd>
   </dl>
+  <p class="pd">PD: lo vas a hacer genial 💖 (y si no, también) 🧸</p>
 
   <div class="rules">
-    <h2>Cómo funciona</h2>
+    <h2>Normas de uso</h2>
     <ol>
-      <li><span>Para añadir algo, escríbelo en el campo de su sección.</span></li>
-      <li><span>La mayúscula inicial se pone sola y el punto final se quita solo.<small>Los elementos de una lista no terminan en punto.</small></span></li>
-      <li><span>Lo nuevo se coloca automáticamente por orden alfabético.</span></li>
-      <li><span>Todo lo añadido recibe la observación "Añadido fuera de plazo".<small>Debería haberlo previsto.</small></span></li>
-      <li><span>No se guarda nada: al recargar, la lista vuelve a estar como al principio.</span></li>
+      <li><span>Las secciones en blanco y negro son de cumplimiento estricto.<small>Los elementos añadidos se corrigen: mayúscula inicial, sin punto final y por orden alfabético. Reciben la observación "Añadido fuera de plazo".</small></span></li>
+      <li><span>Las secciones de colores son de cumplimiento cuqui.<small>Ahí todo lo que añadas es una idea maravillosa ✨</small></span></li>
+      <li><span>Este documento no guarda nada.<small>Al recargar vuelve a su estado original, que es el correcto.</small></span></li>
     </ol>
   </div>
 
@@ -224,52 +279,52 @@ footer div:nth-child(even){text-align:right}
   <footer>
     <div class="end">Fin del documento.</div>
     <div>Página 1 de 1</div>
-    <div>Este documento no contiene confeti.</div>
-    <div>Revisado. Dos veces.</div>
+    <div>Este documento no contiene confeti. <span class="cute-foot">(bueno, un poquito ✨)</span></div>
+    <div>No se aceptan anotaciones a mano.</div>
   </footer>
 </main>
 
 <script>
 const SECTIONS = [
-  {t:"Señalización", note:"Antes que nada.", items:[
-    ["Zona marcada con cartel NO SE LLEVA","1 ud.","Una habitación o un armario."],
-    ["Avisar al encargado","1 ud.","El primer día."],
-    ["Kit guardado en maletas","1 lote","Mejor que en cajas: las cajas acaban en el camión."]
+  {t:"Protocolo de señalización", note:"Condición previa a todas las demás secciones.", items:[
+    ["Zona delimitada con cartel NO SE LLEVA","1 ud.","Tipografía legible a 3 m como mínimo."],
+    ["Aviso verbal al encargado","3 ud.","Días 1, 2 y 3. Registrar hora."],
+    ["Kit contenido en maletas","1 lote","Prohibido el uso de cajas de cartón."]
   ]},
-  {t:"Suministros", note:"", items:[
-    ["Luz, agua y gas activos","3 ud.","Hasta el último día."],
-    ["Fecha de traslado de la fibra","1 ud.","Al instalarla en la casa nueva, cortan la del piso."]
+  {t:"Suministros", note:"No modificar hasta la fecha de cierre.", items:[
+    ["Luz, agua y gas en servicio","3 ud.","Hasta el último día, inclusive."],
+    ["Fecha de traslado de fibra","1 ud.","Confirmar por escrito."]
   ]},
-  {t:"Puesto de trabajo", note:"", items:[
-    ["Portátil y cargadores","1 lote",""],
-    ["Regleta y alargador","2 ud.",""],
-    ["Auriculares y equipo diario","1 lote",""],
-    ["Mesa plegable y silla","2 ud.","Altura de mesa: 72 a 75 cm."],
-    ["Router del operador","1 ud.","Hasta el traslado de la línea."]
+  {t:"Rinconcito de trabajo", cute:"c3", em:"💻", note:"Para que trabajar sea un poquito más bonito.", items:[
+    ["Portátil y cargadores","1 lote","Con su fundita 🥰"],
+    ["Regleta y alargador","2 ud.","Para llegar a todos los enchufitos"],
+    ["Auriculares y equipo diario","1 lote","Y una playlist que dé gustito 🎶"],
+    ["Mesa plegable y silla","2 ud.","Con cojín, que la espalda también importa 🌷"],
+    ["Router del operador","1 ud.","El wifi es amor ☁️"]
   ]},
-  {t:"Dormir", note:"Solo si os quedáis a pasar la noche.", items:[
-    ["Cama o colchón hinchable","1 ud.",""],
-    ["Sábanas y almohadas","1 juego",""],
-    ["Manta o nórdico","1 ud.",""]
+  {t:"A dormir bonito", cute:"c5", em:"🌙", note:"Solo si os quedáis a pasar la noche. Sueños dulces garantizados.", items:[
+    ["Cama o colchón hinchable","1 ud.","Mullidito, por favor ☁️"],
+    ["Sábanas y almohadas","1 juego","Las más suavecitas 🧸"],
+    ["Manta o nórdico","1 ud.","Para hacerse un burrito 🌯"]
   ]},
-  {t:"Baño", note:"", items:[
-    ["Toallas","2 ud.",""],
-    ["Papel higiénico","4 rollos",""],
-    ["Gel, champú, cepillos y desodorante","1 lote",""],
-    ["Secador","1 ud.",""],
-    ["Medicación","1 lote",""]
+  {t:"Baño spa", cute:"c2", em:"🫧", note:"Mimos imprescindibles.", items:[
+    ["Toallas","2 ud.","Esponjositas 🤍"],
+    ["Papel higiénico","4 rollos","Lo más importante del universo ✨"],
+    ["Gel, champú, cepillos y desodorante","1 lote","Que huela a gloria 🌸"],
+    ["Secador","1 ud.","Melena de anuncio 💁"],
+    ["Medicación","1 lote","Cuídate mucho 💖"]
   ]},
-  {t:"Cocina mínima", note:"", items:[
-    ["Cafetera y café","1 ud.",""],
-    ["Tazas, platos, vasos y cubiertos","2 juegos",""],
+  {t:"Cocina mínima", note:"No se cocina. Se subsiste.", items:[
+    ["Cafetera y café","1 ud.","Dosis: según necesidad operativa."],
+    ["Tazas, platos, vasos y cubiertos","2 juegos","Uno por persona."],
     ["Sartén o cazo y cuchillo","2 ud.",""],
     ["Lavavajillas y bayeta","2 ud.",""],
     ["Bolsas de basura","10 ud.",""],
-    ["Agua y comida que no caduque","1 lote",""]
+    ["Agua y alimentos no perecederos","1 lote","Caducidad posterior a la fecha de cierre."]
   ]},
-  {t:"Ropa", note:"", items:[
-    ["Maleta con ropa","1 ud./persona","Doblada. No enrollada."],
-    ["Cargador de móvil","1 ud./persona",""]
+  {t:"Ropita", cute:"c1", em:"👗", note:"Para ir divina hasta el último día.", items:[
+    ["Maleta con ropa","1 ud./persona","Los modelitos favoritos 💅"],
+    ["Cargador de móvil","1 ud./persona","Para mandar fotitos 📸"]
   ]},
   {t:"Limpieza final", note:"", items:[
     ["Escoba, recogedor, fregona y cubo","4 ud.",""],
@@ -281,26 +336,38 @@ const SECTIONS = [
     ["Cinta americana","1 rollo","Corte recto. Nunca rasgado."],
     ["Bombillas de repuesto","2 ud.","Misma temperatura de color que las instaladas."]
   ]},
-  {t:"Va contigo en el coche", note:"Esto no se lo lleva la empresa.", items:[
-    ["DNI, escrituras, hipoteca y contratos","1 carpeta","Ordenados por fecha, claro."],
-    ["Llaves de las dos casas","2 juegos",""],
+  {t:"Transporte personal", note:"No delegable en la empresa de mudanzas.", items:[
+    ["DNI, escrituras, hipoteca y contratos","1 carpeta","Ordenados por fecha."],
+    ["Llaves de ambas viviendas","2 juegos","Etiquetadas."],
     ["Ordenadores y discos de trabajo","1 lote",""],
     ["Joyas y dinero","1 lote",""]
   ]},
-  {t:"Último día", note:"", items:[
-    ["Foto a los contadores","3 ud.","Luz, agua y gas."],
-    ["Repaso a armarios, cajones, trastero y tendedero","4 zonas","En sentido horario."],
-    ["Lo que quede del kit, al coche","1 viaje",""],
-    ["Entregar las llaves","1 ud.",""]
+  {t:"Último día", cute:"c4", em:"🏡", note:"Despedirse de la casa con cariño.", items:[
+    ["Foto a los contadores","3 ud.","Y una fotito de recuerdo 📷"],
+    ["Repaso a armarios, cajones, trastero y tendedero","4 zonas","Por si se esconde algún calcetín 🧦"],
+    ["Lo que quede del kit, al coche","1 viaje","Con música a todo volumen 🎵"],
+    ["Entregar las llaves","1 ud.","Y a estrenar casa nueva 🥹💖"]
   ]}
 ];
+const CUTE_EMOJI = ["🌸","✨","🧸","🍓","☁️","💖","🌷","🦄"];
+const CUTE_MSG = ["¡Qué idea tan bonita! 🌷","¡Apuntadito con amor! 💖","¡Eres la mejor! ✨","¡Me encanta! 🧸","¡Perfecto, bonita! 🌸"];
 
 const checked = new Set();
 const pad = n => String(n).padStart(2, "0");
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
 function build(){
-  document.getElementById("lists").innerHTML = SECTIONS.map((s, i) => `
+  document.getElementById("lists").innerHTML = SECTIONS.map((s, i) => s.cute ? `
+    <section class="cute ${s.cute}">
+      <div class="cute-head"><span class="em" aria-hidden="true">${s.em}</span><h2>${esc(s.t)}</h2><span class="cute-count" data-c="${i}"></span></div>
+      ${s.note ? `<p class="cute-note">${esc(s.note)}</p>` : ""}
+      <ul data-s="${i}"></ul>
+      <div class="add" data-s="${i}">
+        <input type="text" maxlength="80" placeholder="¿Qué más necesitas, bonita? 🌷" aria-label="Nuevo elemento para ${esc(s.t)}">
+        <button type="button">Añadir ✨</button>
+      </div>
+      <div class="msg" data-m="${i}" aria-live="polite"></div>
+    </section>` : `
     <section>
       <div class="sec-head"><span class="n">${pad(i)}</span><h2>${esc(s.t)}</h2><span class="c" data-c="${i}"></span></div>
       ${s.note ? `<p class="sec-note">${esc(s.note)}</p>` : ""}
@@ -319,20 +386,25 @@ function build(){
 function render(){
   let total = 0, done = 0;
   SECTIONS.forEach((s, i) => {
-    const body = document.querySelector(`tbody[data-s="${i}"]`);
+    const body = document.querySelector(`[data-s="${i}"]:is(tbody, ul)`);
     let d = 0;
     body.innerHTML = s.items.map((it, j) => {
       const id = i + "." + j; const on = checked.has(id);
       total++; if(on){ done++; d++; }
+      if(s.cute) return `<li class="${on ? "done" : ""}">
+        <input type="checkbox" class="heart" data-id="${id}" ${on ? "checked" : ""} aria-label="${esc(it[0])}">
+        <span class="t">${esc(it[0])}${it[2] ? `<small>${esc(it[2])}</small>` : ""}</span>
+        <span class="q">${esc(it[1])}</span>
+      </li>`;
       return `<tr class="${on ? "done" : ""}">
         <td class="chk"><input type="checkbox" data-id="${id}" ${on ? "checked" : ""} aria-label="${esc(it[0])}"></td>
         <td class="num">${pad(i)}.${pad(j + 1)}</td>
         <td class="el">${esc(it[0])}</td>
         <td class="qty">${esc(it[1])}</td>
-        <td class="obs">${esc(it[2] || "")}</td>
+        <td class="obs">${esc(it[2] || "Sin observaciones.")}</td>
       </tr>`;
     }).join("");
-    document.querySelector(`[data-c="${i}"]`).textContent = d + " / " + s.items.length;
+    document.querySelector(`[data-c="${i}"]`).textContent = s.cute ? `${d} de ${s.items.length} 💕` : d + " / " + s.items.length;
   });
   const pct = total ? (done / total * 100) : 0;
   document.getElementById("pct").textContent = `${done} / ${total} (${pct.toFixed(2).replace(".", ",")} %)`;
@@ -354,7 +426,16 @@ function addItem(box){
   const input = box.querySelector("input");
   const msg = document.querySelector(`[data-m="${i}"]`);
   let t = input.value.trim().replace(/\s+/g, " ");
-  if(!t){ msg.textContent = "El campo está vacío."; input.focus(); return; }
+  if(SECTIONS[i].cute){
+    if(!t){ msg.textContent = "Escribe algo bonito aquí 🌸"; input.focus(); return; }
+    const e = CUTE_EMOJI[Math.floor(Math.random() * CUTE_EMOJI.length)];
+    SECTIONS[i].items.push([t + " " + e, "1 ud.", "Añadido con mucho amor"]);
+    input.value = ""; input.focus();
+    msg.textContent = CUTE_MSG[Math.floor(Math.random() * CUTE_MSG.length)];
+    render();
+    return;
+  }
+  if(!t){ msg.textContent = "Error 01: campo vacío. Nada que añadir."; input.focus(); return; }
   t = t.charAt(0).toUpperCase() + t.slice(1).replace(/[.!¡¿?]+$/, "");
   const prev = SECTIONS[i].items.map(x => x[0]);
   const keepChecked = new Set([...checked].filter(id => id.startsWith(i + ".")).map(id => prev[+id.split(".")[1]]));
@@ -364,7 +445,7 @@ function addItem(box){
   SECTIONS[i].items.forEach((x, j) => { if(keepChecked.has(x[0])) checked.add(i + "." + j); });
   input.value = "";
   input.focus();
-  msg.textContent = "Añadido y colocado por orden alfabético.";
+  msg.textContent = "Elemento registrado. Orden alfabético restablecido. Mayúscula inicial corregida.";
   render();
 }
 
